@@ -6,8 +6,10 @@ import type { JointSpec } from '@/machines/types'
 const props = defineProps<{ spec: JointSpec }>()
 const machine = useMachineStore()
 
+// A wrapping joint is stored in (-180, 180]; -180 would be written back as +180 and the
+// thumb would jump to the far end mid-drag, so the slider stops at -179.
 const range = computed(() =>
-  props.spec.wrap ? { min: -180, max: 180 } : { min: props.spec.min, max: props.spec.max },
+  props.spec.wrap ? { min: -179, max: 180 } : { min: props.spec.min, max: props.spec.max },
 )
 const value = computed(() => machine.joints[props.spec.name] ?? props.spec.rest)
 

@@ -11,6 +11,8 @@ export function useKeyboardJoints() {
   const held = new Set<string>()
 
   function onKeyDown(e: KeyboardEvent) {
+    // Shortcuts like Cmd+A: macOS sends no keyup for the letter, so it would stay held.
+    if (e.metaKey || e.ctrlKey || e.altKey) return
     if (isEditableTarget(e.target)) return
     if (e.code === RESET_KEY) {
       machine.resetJoints()

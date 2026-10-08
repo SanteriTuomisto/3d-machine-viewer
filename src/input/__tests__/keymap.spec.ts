@@ -39,6 +39,18 @@ describe('isEditableTarget', () => {
     div.setAttribute('contenteditable', 'true')
     expect(isEditableTarget(div)).toBe(true)
   })
+  it('is false for checkboxes and radios, so clicking Grid does not swallow joint keys', () => {
+    for (const type of ['checkbox', 'radio']) {
+      const input = document.createElement('input')
+      input.type = type
+      expect(isEditableTarget(input)).toBe(false)
+    }
+  })
+  it('stays true for range inputs so a focused slider owns the arrow keys', () => {
+    const input = document.createElement('input')
+    input.type = 'range'
+    expect(isEditableTarget(input)).toBe(true)
+  })
   it('is false for the body, buttons and null', () => {
     expect(isEditableTarget(document.body)).toBe(false)
     expect(isEditableTarget(document.createElement('button'))).toBe(false)
