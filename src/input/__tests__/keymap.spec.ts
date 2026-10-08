@@ -16,7 +16,7 @@ describe('velocitiesFor', () => {
     expect(velocitiesFor(new Set(['KeyA', 'KeyD']), J)).toEqual({ swing: 0 })
   })
   it('ignores unbound keys and combines joints', () => {
-    expect(velocitiesFor(new Set(['KeyZ', 'Space', 'ArrowLeft', 'KeyS']), J)).toEqual({
+    expect(velocitiesFor(new Set(['KeyX', 'Space', 'ArrowRight', 'KeyS']), J)).toEqual({
       bucket: 60,
       boom: 25,
     })
@@ -26,7 +26,8 @@ describe('velocitiesFor', () => {
 describe('isBoundKey', () => {
   it('knows which codes a machine uses', () => {
     expect(isBoundKey('ArrowUp', J)).toBe(true)
-    expect(isBoundKey('KeyZ', J)).toBe(false)
+    expect(isBoundKey('KeyQ', J)).toBe(true)
+    expect(isBoundKey('KeyX', J)).toBe(false)
   })
 })
 
