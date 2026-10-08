@@ -1,27 +1,35 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from 'vue'
-import { BoxGeometry, Mesh, MeshStandardMaterial } from 'three'
 import { SceneHost } from '@/engine/SceneHost'
 import { addDefaultLights } from '@/engine/lights'
+import { getMachine, DEFAULT_MACHINE_ID } from '@/machines/registry'
+import type { BuiltMachine } from '@/machines/types'
+import { degToRad } from '@/joints/jointMath'
 
 const container = ref<HTMLDivElement | null>(null)
 let host: SceneHost | null = null
+let built: BuiltMachine | null = null
 
 onMounted(() => {
   if (!container.value) return
-  host = new SceneHost(container.value, { cameraStart: [8, 5, 10], target: [0, 1.5, 0] })
+  const def = getMachine(DEFAULT_MACHINE_ID)
+  host = new SceneHost(container.value, { cameraStart: def.cameraStart, target: def.center })
   addDefaultLights(host.scene)
 
-  // Temporary: replaced by the machine in Task 5.
-  const cube = new Mesh(new BoxGeometry(2, 1, 1), new MeshStandardMaterial({ color: 0xf2b705 }))
-  cube.position.set(0, 1.5, 0)
-  host.scene.add(cube)
+  built = def.build()
+  for (const spec of def.joints) {
+    const p = built.pivots[spec.name]
+    if (p) p.rotation[spec.axis] = degToRad(spec.rest)
+  }
+  host.scene.add(built.root)
 
   host.start()
 })
 
 onBeforeUnmount(() => {
+  built?.dispose()
   host?.dispose()
+  built = null
   host = null
 })
 </script>
