@@ -1,5 +1,7 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import ViewerCanvas from '@/scene/ViewerCanvas.vue'
+</script>
 
 <template>
-  <p style="padding: 16px">3D Machine Viewer — scaffold ok</p>
+  <ViewerCanvas />
 </template>
