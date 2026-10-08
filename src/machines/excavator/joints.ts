@@ -1,0 +1,45 @@
+import type { JointSpec } from '@/machines/types'
+
+export const EXCAVATOR_JOINTS: readonly JointSpec[] = [
+  {
+    name: 'swing',
+    label: 'Swing',
+    axis: 'y',
+    min: 0,
+    max: 0,
+    wrap: true,
+    rest: 0,
+    speed: 40,
+    keys: { positive: 'KeyA', negative: 'KeyD' },
+  },
+  {
+    name: 'boom',
+    label: 'Boom',
+    axis: 'z',
+    min: -35,
+    max: 55,
+    rest: 30,
+    speed: 25,
+    keys: { positive: 'KeyS', negative: 'KeyW' },
+  },
+  {
+    name: 'stick',
+    label: 'Stick',
+    axis: 'z',
+    min: -140,
+    max: -20,
+    rest: -60,
+    speed: 35,
+    keys: { positive: 'ArrowUp', negative: 'ArrowDown' },
+  },
+  {
+    name: 'bucket',
+    label: 'Bucket',
+    axis: 'z',
+    min: -60,
+    max: 120,
+    rest: 30,
+    speed: 60,
+    keys: { positive: 'ArrowLeft', negative: 'ArrowRight' },
+  },
+]

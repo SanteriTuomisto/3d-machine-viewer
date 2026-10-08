@@ -36,7 +36,7 @@ Success looks like:
 
 ```
 src/
-  main.ts, App.vue              Vue bootstrap; App = <ViewerCanvas/> + <Hud/>
+  main.ts, App.vue              Vue bootstrap; App = <ViewerCanvas/> + <ViewerHud/>
   engine/
     SceneHost.ts                renderer, scene, camera, OrbitControls, grid, resize,
                                 render loop with onFrame(delta) callbacks, resetView, dispose
@@ -65,7 +65,7 @@ src/
     ViewerCanvas.vue            owns a SceneHost, builds the machine, copies store angles
                                 into pivots every frame, watches the viewer store
   ui/
-    Hud.vue, JointPanel.vue, JointSlider.vue
+    ViewerHud.vue, JointPanel.vue, JointSlider.vue
 ```
 
 Data flow: input (OrbitControls, HUD, keyboard) → Pinia stores → `ViewerCanvas` frame
@@ -116,7 +116,9 @@ Generic code only ever sees this interface. Adding a machine = new folder + regi
   `WebGLRenderer` (`antialias: true`, device pixel ratio capped at 2), a `Scene` with a solid
   background `#1b2430`, a `PerspectiveCamera` (fov 45, near 0.1, far 200), and
   `OrbitControls` from `three/addons/controls/OrbitControls.js`.
-- Controls: `target` = machine centre, `enablePan = false` (machine stays put),
+- Controls: `target` = machine centre `(2.5, 2.5, 0)`, the middle of the machine including
+  the arm at rest, so the whole machine is in frame; camera starts at `(11, 7, 15)`.
+  `enablePan = false` (machine stays put),
   `enableDamping = true`, `dampingFactor = 0.08`, `minDistance = 4`, `maxDistance = 40`,
   `minPolarAngle = 0`, `maxPolarAngle = π` (full sphere, can look from underneath). Touch
   one-finger orbit and pinch zoom come with OrbitControls.
@@ -125,7 +127,8 @@ Generic code only ever sees this interface. Adding a machine = new folder + regi
 - `resetView()` calls `controls.reset()`; `saveState()` is called once in the constructor
   after the camera is positioned.
 - Resize: a `ResizeObserver` on the container updates renderer size and camera aspect.
-- Loop: `start()` runs `requestAnimationFrame`; each frame computes `delta` from a `Clock`,
+- Loop: `start()` runs `requestAnimationFrame`; each frame computes `delta` from a `Timer`
+  (`Clock` is deprecated since three r183),
   clamps it to `MAX_FRAME_DELTA = 0.1` s, calls every `onFrame` callback, updates controls
   (needed for damping), renders. `stop()` cancels. `dispose()` stops, disconnects the
   observer, disposes controls and renderer.
