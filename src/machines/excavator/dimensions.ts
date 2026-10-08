@@ -22,8 +22,9 @@ export const BOOM_SEGMENTS = [
   { length: 2.6, angleDeg: -20 },
 ] as const
 
-export const MACHINE_CENTER = [0, 1.5, 0] as const
-export const CAMERA_START = [8, 5, 10] as const
+/** Middle of the machine including the arm at rest; the orbit target. */
+export const MACHINE_CENTER = [2.5, 2.5, 0] as const
+export const CAMERA_START = [11, 7, 15] as const
 
 const toRad = (deg: number) => (deg * Math.PI) / 180
 
