@@ -3,6 +3,7 @@ import { setActivePinia, createPinia } from 'pinia'
 import { useMachineStore } from '@/stores/machine'
 import { restPose } from '@/joints/jointMath'
 import { getMachine } from '@/machines/registry'
+import { DIG_CYCLE } from '@/machines/excavator/animations'
 
 const excavatorRest = restPose(getMachine('excavator').joints)
 
@@ -66,5 +67,37 @@ describe('machine store', () => {
     expect(s.joints).toEqual(excavatorRest)
     expect(s.playing).toBeNull()
     expect(s.playTime).toBe(0)
+  })
+
+  it('play starts from the first keyframe', () => {
+    const s = useMachineStore()
+    s.setJoint('boom', 0)
+    s.play('dig')
+    expect(s.playing).toBe('dig')
+    expect(s.playTime).toBe(0)
+    expect(s.joints).toEqual(DIG_CYCLE[0]?.joints)
+  })
+
+  it('play ignores unknown animations', () => {
+    const s = useMachineStore()
+    s.play('moonwalk')
+    expect(s.playing).toBeNull()
+  })
+
+  it('advance moves time forward and stops exactly on the last frame', () => {
+    const s = useMachineStore()
+    s.play('dig')
+    s.advance(0.5)
+    expect(s.playTime).toBeCloseTo(0.5)
+    expect(s.playing).toBe('dig')
+    s.advance(1000) // backgrounded tab
+    expect(s.playing).toBeNull()
+    expect(s.joints).toEqual(DIG_CYCLE[DIG_CYCLE.length - 1]?.joints)
+  })
+
+  it('advance does nothing when not playing', () => {
+    const s = useMachineStore()
+    s.advance(1)
+    expect(s.joints).toEqual(excavatorRest)
   })
 })

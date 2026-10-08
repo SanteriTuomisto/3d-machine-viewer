@@ -19,6 +19,14 @@ function keyLabel(code: string) {
     <JointSlider v-for="spec in machine.definition.joints" :key="spec.name" :spec="spec" />
     <div class="row">
       <button type="button" @click="machine.resetJoints()">Reset arm</button>
+      <button
+        v-for="name in Object.keys(machine.definition.animations)"
+        :key="name"
+        type="button"
+        @click="machine.playing === name ? machine.stop() : machine.play(name)"
+      >
+        {{ machine.playing === name ? 'Stop' : name.charAt(0).toUpperCase() + name.slice(1) }}
+      </button>
     </div>
     <p class="keys">
       <span v-for="spec in machine.definition.joints" :key="spec.name">

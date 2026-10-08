@@ -38,6 +38,7 @@ onMounted(() => {
 
   host.onFrame((delta) => {
     keyboard.step(delta)
+    machine.advance(delta)
     applyPose()
   })
   host.start()

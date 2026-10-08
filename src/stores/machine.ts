@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { DEFAULT_MACHINE_ID, getMachine } from '@/machines/registry'
 import type { JointSpec } from '@/machines/types'
 import { applyLimit, degToRad, restPose } from '@/joints/jointMath'
+import { duration, sampleKeyframes } from '@/animation/keyframes'
 
 export const useMachineStore = defineStore('machine', {
   state: () => ({
@@ -44,6 +45,25 @@ export const useMachineStore = defineStore('machine', {
     stop() {
       this.playing = null
       this.playTime = 0
+    },
+    play(name: string) {
+      const frames = this.definition.animations[name]
+      if (!frames || frames.length === 0) return
+      this.playing = name
+      this.playTime = 0
+      this.applyPose(sampleKeyframes(frames, 0))
+    },
+    advance(delta: number) {
+      if (!this.playing) return
+      const frames = this.definition.animations[this.playing] ?? []
+      const end = duration(frames)
+      this.playTime = Math.min(this.playTime + delta, end)
+      this.applyPose(sampleKeyframes(frames, this.playTime))
+      if (this.playTime >= end) this.stop()
+    },
+    /** Writes through setJoint so limits always apply. */
+    applyPose(pose: Record<string, number>) {
+      for (const [name, deg] of Object.entries(pose)) this.setJoint(name, deg)
     },
   },
 })
