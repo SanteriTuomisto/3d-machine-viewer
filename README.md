@@ -17,7 +17,10 @@ pnpm build
 ## Controls
 
 - Drag to orbit, scroll or pinch to zoom. "Reset view" returns to the start.
-- Excavator: A/D swing · S/W boom · ↑/↓ stick · ←/→ bucket · R reset arm. Sliders do the same.
+- Excavator: A/D swing · S/W boom · ↑/↓ stick · ←/→ bucket curl/dump · Z/C tilt · Q/E rotate ·
+  R reset arm. Sliders do the same.
+- The bucket hangs on a tiltrotator (kauhanpyörittäjä): tilt leans it sideways, rotate spins it
+  endlessly around its own axis.
 - "Dig" plays a canned dig cycle; any input stops it.
 
 ## Layout

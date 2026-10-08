@@ -47,9 +47,10 @@ describe('machine store', () => {
 
   it('nudgeJoint stops at a limit', () => {
     const s = useMachineStore()
-    s.setJoint('bucket', 119)
+    const max = s.spec('bucket')!.max
+    s.setJoint('bucket', max - 1)
     s.nudgeJoint('bucket', 10)
-    expect(s.joints.bucket).toBe(120)
+    expect(s.joints.bucket).toBe(max)
   })
 
   it('jointsRad converts degrees to radians', () => {

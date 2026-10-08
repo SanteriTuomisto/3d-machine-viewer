@@ -154,8 +154,17 @@ root (Group)                      undercarriage: two track boxes + frame box, y=
   swing  (Group) at (0, 0.95, 0)   house body, cabin (glass), counterweight, exhaust
     boom (Group) at (1.3, 0.7, 0.45)   gooseneck: segment A 3.2 m at +20°, segment B 2.6 m at −20°
       stick (Group) at boomTip()      box 2.9 m along +X
-        bucket (Group) at (2.9, 0, 0) back/bottom/side plates, open front and top, 3 teeth
+        bucket (Group) at (2.9, 0, 0) curl pin + tiltrotator top bracket; hangs along −Y
+          tilt (Group) at (0, −0.15, 0)   tilt pin along X; leans the attachment sideways
+            rotate (Group) at (0, −0.15, 0)   rotator ring + quick coupler; spins about Y
+              backhoe bucket under the coupler, centred on the rotator axis: back, bottom,
+              part top and side plates, mouth and 3 teeth facing −X (toward the machine)
 ```
+
+The bucket is a backhoe bucket: at rest its mouth and teeth face the machine, and curling
+sweeps the teeth toward the machine and up. Between the stick tip and the bucket sits a
+tiltrotator (kauhanpyörittäjä): tilt about the attachment's X axis, then endless rotation
+about its own axis. Tiltrotator sizes are in `DIM.tiltrotator`.
 
 Each pivot group is named after its joint and returned in `pivots`. Pins (short cylinders
 along Z) at each hinge for readability. Materials: `MeshStandardMaterial`, CAT-yellow
@@ -185,7 +194,9 @@ Pointer events on the HUD must not reach the canvas.
 | swing  | y | wrap | 0 | 40 | KeyA / KeyD | counter-clockwise from above |
 | boom   | z | −35 … +55 | +30 | 25 | KeyS / KeyW | boom up (W lowers, S raises) |
 | stick  | z | −140 … −20 | −60 | 35 | ArrowUp / ArrowDown | stick out (toward inline with boom) |
-| bucket | z | −60 … +120 | +30 | 60 | ArrowLeft / ArrowRight | curl (teeth toward stick); − = dump |
+| bucket | z | −60 … +110 | +30 | 60 | ArrowRight / ArrowLeft | dump (mouth turns down and out); − = curl |
+| tilt   | x | −40 … +40 | 0 | 30 | KeyC / KeyZ | tilt right (right edge down, seen from the cab) |
+| rotate | y | wrap | 0 | 60 | KeyQ / KeyE | rotate left (counter-clockwise from above) |
 
 `KeyR` resets all joints (global, not per machine). Ranges are plausible, not datasheet.
 
@@ -246,6 +257,9 @@ Nothing in `engine/`, `stores/`, `input/`, `animation/` or `ui/` changes.
     play/advance/stop, huge delta.
   - `buildExcavator`: a pivot for every joint spec; bucket pivot world position equals the
     sum of offsets at zero angles and mirrors under a 180° swing; `dispose` doesn't throw.
+  - Attachment: at rest the teeth face the machine; curling lifts them; the chain is
+    bucket → tilt → rotate; rotate 180° mirrors the teeth about the rotator axis; tilt moves
+    them sideways only.
 - **Not tested automatically:** `SceneHost` (needs WebGL), `ViewerCanvas`, HUD. Verified
   by the manual checklist in the plan (orbit full sphere, zoom limits, reset, resize,
   touch, every joint reaches both limits, dig cycle, backgrounded tab).

@@ -12,6 +12,22 @@ export const DIM = {
   boomPivot: { x: 1.3, y: 0.7, z: 0.45 },
   boom: { thickness: 0.45 },
   stick: { length: 2.9, thickness: 0.35 },
+  /**
+   * Tiltrotator hanging from the bucket curl pin at the stick tip. Each drop is the distance
+   * down its own axis to the next pivot: curl pin → tilt pin → rotator → coupler → bucket.
+   */
+  tiltrotator: {
+    width: 0.5,
+    depth: 0.45,
+    bracketHeight: 0.15,
+    tiltDrop: 0.15,
+    rotateDrop: 0.15,
+    ringRadius: 0.26,
+    ringHeight: 0.15,
+    couplerHeight: 0.06,
+    couplerSize: 0.6,
+  },
+  /** Backhoe bucket: mouth and teeth face the machine (-X at rest), coupler on its back. */
   bucket: { width: 1.2, depth: 0.9, height: 0.8, plate: 0.08 },
   pinRadius: 0.2,
 } as const
