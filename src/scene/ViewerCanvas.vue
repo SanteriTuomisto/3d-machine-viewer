@@ -5,10 +5,12 @@ import { addDefaultLights } from '@/engine/lights'
 import type { BuiltMachine } from '@/machines/types'
 import { useViewerStore } from '@/stores/viewer'
 import { useMachineStore } from '@/stores/machine'
+import { useKeyboardJoints } from '@/input/useKeyboardJoints'
 
 const container = ref<HTMLDivElement | null>(null)
 const viewer = useViewerStore()
 const machine = useMachineStore()
+const keyboard = useKeyboardJoints()
 let host: SceneHost | null = null
 let built: BuiltMachine | null = null
 
@@ -34,7 +36,8 @@ onMounted(() => {
   host.scene.add(built.root)
   applyPose()
 
-  host.onFrame(() => {
+  host.onFrame((delta) => {
+    keyboard.step(delta)
     applyPose()
   })
   host.start()

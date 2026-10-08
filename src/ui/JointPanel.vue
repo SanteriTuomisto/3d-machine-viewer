@@ -2,6 +2,16 @@
 import JointSlider from './JointSlider.vue'
 import { useMachineStore } from '@/stores/machine'
 const machine = useMachineStore()
+
+const KEY_LABELS: Record<string, string> = {
+  ArrowUp: '↑',
+  ArrowDown: '↓',
+  ArrowLeft: '←',
+  ArrowRight: '→',
+}
+function keyLabel(code: string) {
+  return KEY_LABELS[code] ?? code.replace(/^Key/, '')
+}
 </script>
 
 <template>
@@ -10,6 +20,13 @@ const machine = useMachineStore()
     <div class="row">
       <button type="button" @click="machine.resetJoints()">Reset arm</button>
     </div>
+    <p class="keys">
+      <span v-for="spec in machine.definition.joints" :key="spec.name">
+        {{ keyLabel(spec.keys.positive) }}/{{ keyLabel(spec.keys.negative) }}
+        {{ spec.label.toLowerCase() }} ·
+      </span>
+      R reset
+    </p>
   </div>
 </template>
 
@@ -31,5 +48,10 @@ button {
   background: #2d3748;
   color: inherit;
   cursor: pointer;
+}
+.keys {
+  margin: 4px 0 0;
+  font-size: 12px;
+  opacity: 0.7;
 }
 </style>
